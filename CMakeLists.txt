@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 set(IMGUI_HDRS
     imgui.h
+    imconfig.h
     examples/opengl3_example/imgui_impl_glfw_gl3.h
 )
 set(IMGUI_SRCS
@@ -26,7 +27,7 @@ target_link_libraries(imgui PUBLIC glfw ::glew)
 target_include_directories(${PROJECT_NAME} 
     PUBLIC 
         $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:imgui>)
+        $<INSTALL_INTERFACE:include/imgui>)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX _d)
 set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER libs)
