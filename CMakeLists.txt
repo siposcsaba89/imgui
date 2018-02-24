@@ -13,7 +13,7 @@ set(IMGUI_HDRS
 set(IMGUI_SRCS
     imgui.cpp
     examples/opengl3_example/imgui_impl_glfw_gl3.cpp
-
+    imgui_draw.cpp
 )
 
 find_package(glfw3 REQUIRED CONFIG)
