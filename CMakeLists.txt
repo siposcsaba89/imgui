@@ -4,16 +4,24 @@ project(imgui)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
+option(BUILD_DEMO_APP "Build imgui glfw3 opengl demo app" OFF)
 
 set(IMGUI_HDRS
     imgui.h
     imconfig.h
-    examples/opengl3_example/imgui_impl_glfw_gl3.h
+    examples/imgui_impl_opengl3.h
+    examples/imgui_impl_glfw.h
 )
 set(IMGUI_SRCS
     imgui.cpp
-    examples/opengl3_example/imgui_impl_glfw_gl3.cpp
+    examples/imgui_impl_opengl3.cpp
+    examples/imgui_impl_glfw.cpp
     imgui_draw.cpp
+    imgui_internal.h
+    imgui_widgets.cpp
+    imstb_rectpack.h
+    imstb_textedit.h
+    imstb_truetype.h
 )
 
 find_package(glfw3 REQUIRED CONFIG)
@@ -59,12 +67,20 @@ endif()
 	 
 if (glew_FOUND)
     target_link_libraries(${PROJECT_NAME} PUBLIC ::glew)
-    target_compile_definitions(${PROJECT_NAME} PUBLIC -DHAVE_GLEW=1)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC -DHAVE_GLEW=1 -DIMGUI_IMPL_OPENGL_LOADER_GLEW=1)
     set(gles2_FOUND FALSE)
 elseif(gles2_FOUND)
-    target_link_libraries(${PROJECT_NAME} PUBLIC ::gles2)
+#danger find gles3 instead of gles2
+    target_link_libraries(${PROJECT_NAME} PUBLIC ::gles2 )
+    target_compile_definitions(${PROJECT_NAME} PUBLIC -DHAVE_GLEW=1 -DUSE_GL_ES3=1)
 else()
     message(FATAL_ERROR "Could not find glew nor gles2")
+endif()
+
+if(BUILD_DEMO_APP)
+    add_executable(imgui_demo examples/example_glfw_opengl3/main.cpp imgui_demo.cpp)
+    target_link_libraries(imgui_demo PRIVATE ::imgui)
+    target_include_directories(imgui_demo PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/examples)
 endif()
 
 
