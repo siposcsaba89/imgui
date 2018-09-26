@@ -46,13 +46,12 @@ endif()
 find_package(glew QUIET CONFIG)
 if (NOT glew_FOUND)
     # hope gles2 is available
-    find_library(GLESV2_LIBRARY NAMES GLESv2 PATHS /usr/lib/)
+    find_library(GLESV2_LIBRARY NAMES GLESv2 PATHS /usr/lib/ /usr/lib/x86_64-linux-gnu/)
     find_path(GL2_INCLUDE NAMES GLES2/gl2.h PATHS /usr/include)
- 
-    if (GLESV2_LIB AND GL2_INCLUDE)
+    if (GLESV2_LIBRARY AND GL2_INCLUDE)
         add_library(::gles2 SHARED IMPORTED)
-        set_property(TARGET ::gles2 PROPERTY IMPORTED_IMPLIB_RELEASE ${GLESV2_LIB})
-        set_property(TARGET ::gles2 PROPERTY IMPORTED_LOCATION_RELEASE ${GLESV2_LIB})
+        set_property(TARGET ::gles2 PROPERTY IMPORTED_IMPLIB_RELEASE ${GLESV2_LIBRARY})
+        set_property(TARGET ::gles2 PROPERTY IMPORTED_LOCATION_RELEASE ${GLESV2_LIBRARY})
         set_property(TARGET ::gles2 PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
         set_property(TARGET ::gles2 PROPERTY INTERFACE_INCLUDE_DIRECTORIES
             $<INSTALL_INTERFACE:${GL2_INCLUDE}>  # <prefix>/include/mylib
