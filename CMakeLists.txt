@@ -23,6 +23,9 @@ set(IMGUI_SRCS
     imstb_truetype.h
     examples/imgui_impl_glfw.cpp
 )
+#this variable needed in cmake.config.in file, set default value to false
+set(gles2_FOUND FALSE)
+set(glew_FOUND FALSE)
 if (BUILD_IMGUI_OPENGL)
     find_package(glew QUIET CONFIG)
     if (NOT glew_FOUND)
@@ -47,6 +50,7 @@ if (BUILD_IMGUI_OPENGL)
     list(APPEND IMGUI_SRCS examples/imgui_impl_opengl3.cpp)
     list(APPEND IMGUI_HDRS examples/imgui_impl_opengl3.h)
 endif()
+set(Vulkan_FOUND FALSE)
 if (BUILD_IMGUI_VULKAN)
     find_package(Vulkan REQUIRED)
     list(APPEND IMGUI_SRCS examples/imgui_impl_vulkan.cpp)
@@ -61,7 +65,7 @@ target_link_libraries(imgui PUBLIC glfw)
 
 target_include_directories(${PROJECT_NAME} 
     PUBLIC 
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
         $<INSTALL_INTERFACE:include/imgui>)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX _d)
@@ -70,7 +74,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER libs)
 if (MSVC)
     target_compile_options(${PROJECT_NAME} PRIVATE "/MP")
 endif()
-
 
 if (BUILD_IMGUI_OPENGL)
     if (glew_FOUND)
